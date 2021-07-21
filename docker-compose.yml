@@ -1,0 +1,36 @@
+version: '3'
+services:
+    postgres:
+        image: postgres:latest
+        environment: 
+            - POSTGRES_PASSWORD=athena
+            - POSTGRES_USER=athena
+            - POSTGRES_DB=athena
+        networks:
+            extnetwork:
+                ipv4_address: 172.26.0.2
+    etcd:
+        image: runnermonster/etcd
+        command: etcd --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls http://0.0.0.0:2379
+        networks:
+            extnetwork:
+                ipv4_address: 172.26.0.3
+    auth2:
+        image: runnermonster/auth2
+        volumes: 
+            - ./config.yaml:/app/config.yaml
+        networks:
+            extnetwork:
+                ipv4_address: 172.26.0.4
+    auth2-front:
+        image: runnermonster/auth2-front
+        ports:
+            - 3000:3000
+        networks:
+            extnetwork:
+                ipv4_address: 172.26.0.5
+networks:
+    extnetwork:
+        ipam:
+            config:
+                - subnet: 172.26.0.0/16
