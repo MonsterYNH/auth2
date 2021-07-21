@@ -3,6 +3,7 @@ package database
 import (
 	"github.com/MonsterYNH/athena/config"
 	"github.com/MonsterYNH/athena/database"
+	"github.com/MonsterYNH/auth2/models"
 	"gorm.io/gorm"
 )
 
@@ -28,6 +29,8 @@ func init() {
 			return nil
 		},
 	)
+
+	db.GetConnect().AutoMigrate(models.User{})
 
 	if err != nil {
 		panic("init db failed")
